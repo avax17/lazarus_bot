@@ -1,65 +1,22 @@
 require('dotenv').config()
-const TelegramApi = require("node-telegram-bot-api")
+const { Markup, Telegraf } = require('telegraf')
 
-const token = process.env.TELEGRAM_BOT_TOKEN
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN)
 
-const bot = new TelegramApi(token, { polling: true, botInfo: { name: "LazarusFBot" } })
+const webAppUrl = 'https://lazarusbank.ru' // URL вашего мини-приложения
 
-const webAppUrl = "t.me/LazarusFBot/lzf"
-// const webAppUrl = "https://ya.ru"
+bot.start((ctx) => ctx.reply(
+  'Приветствую! Я бот компании Lazarus Finance. Нажмите «Старт», чтобы открыть приложение.',
+  Markup.keyboard([
+    Markup.button.webApp('Старт', webAppUrl)
+  ]).resize().oneTime()
+))
 
-// const buttons = {
-//   reply_markup: JSON.stringify({
-//     inline_keyboard: [
-//       [
-//         { text: "Сайт", callback_data: "site", web_app: { url: webAppUrl } },
-//         // { text: "Помощь", callback_data: "help" }
-//       ],
-//     ],
-//   }),
-// }
+// bot.help((ctx) => ctx.reply('Send me a sticker'))
+// bot.on(message('sticker'), (ctx) => ctx.reply('👍'))
+// bot.hears('hi', (ctx) => ctx.reply('Hey there'))
+bot.launch()
 
-const start = () => {
-  // bot.setMyCommands([
-  //   { command: "/start", description: "Начать работу с ботом" },
-  //   // { command: "/help", description: "Помощь" },
-  // ])
-
-  bot.on("message", async (msg) => {
-    const chatId = msg.chat.id
-    const text = msg.text
-
-    if (text === "/start") {
-      return bot.sendMessage(chatId, `Приветствую! Меня зовут ${bot.options.botInfo.name}, я бот компании Lazarus Finance. Давайте начнем!`, {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: 'Сайт', url: webAppUrl }]
-          ]
-        }
-      })
-    }
-
-    // if (text === "/help") {
-    //   return bot.sendMessage(chatId, `Я вам не помогу, я бот для лазаруса`)
-    // }
-
-    return bot.sendMessage(chatId, `Я вас не понимаю, попробуйте еще раз`)
-  })
-
-  // bot.on("callback_query", async (msg) => {
-  //   const data = msg.data
-  //   const chatId = msg.message.chat.id
-
-  //   if (data === "site") {
-  //     await bot.sendMessage(chatId, `http://lazarusbank.ru/`)
-  //   }
-  //   // if (data === "help") {
-  //   //   await bot.sendMessage(chatId, `Я вам не помогу, я бот для лазаруса`)
-  //   // }
-  // })
-}
-
-start();
-
-
-
+// Enable graceful stop
+process.once('SIGINT', () => bot.stop('SIGINT'))
+process.once('SIGTERM', () => bot.stop('SIGTERM'))
