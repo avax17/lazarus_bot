@@ -7,20 +7,21 @@ const webAppUrl = 'https://lazarusbank.ru' // URL вашего мини-прил
 
 
 bot.start(async (ctx) => {
-  await ctx.replyWithPhoto({ source: 'cards.png' })
-  ctx.reply(
-    'Lazarus.Finance — твой надежный партнер для международного бизнеса!\n\nМы современный цифровой сервис для оплаты инвойсов и получения переводов по всему миру.\n\n• Оплата инвойсов до 1 дня на выгодных условиях — комиссия от 0,5%\n• Переводы на китайские карты\n• Swift и SEPA переводы\n• Обмен криптовалюты и валюты разных стран в тот же день\n• Агентские платежи для юр лиц\n• Удобный личный кабинет и поддержка клиентов 24/7',
-    Markup.inlineKeyboard([
-      [
-        Markup.button.callback('О нас', 'about'),
-        Markup.button.webApp('Сайт', 'https://lazarusbank.ru')
-      ],
-      [
-        Markup.button.webApp('Личный кабинет', 'https://lazarusbank.ru/login')
-      ]
-    ])
+  await ctx.replyWithPhoto(
+    { source: 'cards.png' },
+    {
+      caption: 'Lazarus.Finance — твой надежный партнер для международного бизнеса!\n\nМы современный цифровой сервис для оплаты инвойсов и получения переводов по всему миру.\n\n• Оплата инвойсов до 1 дня на выгодных условиях — комиссия от 0,5%\n• Переводы на китайские карты\n• Swift и SEPA переводы\n• Обмен криптовалюты и валюты разных стран в тот же день\n• Агентские платежи для юр лиц\n• Удобный личный кабинет и поддержка клиентов 24/7',
+      ...Markup.inlineKeyboard([
+        [
+          Markup.button.callback('О нас', 'about'),
+          Markup.button.webApp('Сайт', 'https://lazarusbank.ru')
+        ],
+        [
+          Markup.button.webApp('Личный кабинет', 'https://lazarusbank.ru/login')
+        ]
+      ])
+    }
   )
-  // Удалён обработчик bot.hears('Старт', ...)
 })
 
 bot.action('about', async (ctx) => {
